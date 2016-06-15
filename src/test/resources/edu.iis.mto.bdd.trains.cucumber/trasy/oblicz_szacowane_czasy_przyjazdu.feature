@@ -5,7 +5,7 @@ Funkcja: Informacja dla podróżnych o czasie przybycia do stacji docelowej
   Chcę wiedzieć, o której godzinie dotrę do stacji docelowej
 
   Szablon scenariusza: Szacowanie czasu przyjazdu.
-    Zakładając, że chcę się dostać z <start> do <cel>
+    Zakładając że chcę się dostać z <start> do <cel>
     I następny pociąg odjeżdża o <odjazd> na linii <linia>
     Gdy zapytam o godzinę przyjazdu
     Wtedy powinienem uzyskać następujący szacowany czas przyjazdu: <przyjazd>
