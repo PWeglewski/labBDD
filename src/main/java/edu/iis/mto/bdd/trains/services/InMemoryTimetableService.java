@@ -12,6 +12,9 @@ import edu.iis.mto.bdd.trains.model.Line;
 
 public class InMemoryTimetableService implements TimetableService {
 
+    private String currentLine;
+    private LocalTime departureTime;
+
     List<Line> lines = ImmutableList.of(
             Line.named("Western").departingFrom("Emu Plains")
                                  .withStations("Emu Plains","Parramatta","Town Hall", "North Richmond"),
@@ -69,12 +72,13 @@ public class InMemoryTimetableService implements TimetableService {
     }
 
     @Override
-    public void scheduleArrivalTime(String line, LocalTime departureTime) {
-        //To change body of created methods use File | Settings | File Templates.
+    public void scheduleArrivalTime(String line, LocalTime departureTime, String startingPoint) {
+        this.currentLine = line;
+        this.departureTime = departureTime;
     }
 
     @Override
-    public LocalTime getArrivalTime(String travellingOnLine, String destination) {
+    public LocalTime getArrivalTime(String destination) {
         // TODO: Call the back-end service to retrieve this data
         return null;
     }
