@@ -19,7 +19,15 @@ public class InMemoryTimetableService implements TimetableService {
             Line.named("Epping").departingFrom("Epping")
                     .withStations("Epping", "Strathfield", "Central"),
             Line.named("Epping").departingFrom("City")
-                    .withStations("Central", "Strathfield", "Epping")
+                    .withStations("Central", "Strathfield", "Epping"),
+            Line.named("Newcastle").departingFrom("Epping")
+                    .withStations("Epping", "Newcastle", "Central"),
+            Line.named("Newcastle").departingFrom("City")
+                    .withStations("Central", "Newcastle", "Epping"),
+            Line.named("Northern").departingFrom("Epping")
+                    .withStations("Epping", "Northern", "Central"),
+            Line.named("Northern").departingFrom("City")
+                    .withStations("Central", "Northern", "Epping")
     );
     // All trains leave the depots at the same time.
     List<LocalTime> universalDepartureTimes = ImmutableList.of(
