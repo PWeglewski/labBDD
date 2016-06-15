@@ -17,4 +17,4 @@ Scenariusz: Znajdź optymalną trasę pomiędzy stacjami na tej samej linii.
 		|	8:02	|
 		|	8:11	|
 		|	8:14	|
-	
+		|	8:21	|

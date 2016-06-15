@@ -13,7 +13,7 @@ import edu.iis.mto.bdd.trains.model.Line;
 
 public class ItineraryService {
 
-    private static final int MAX_ARRIVAL_TIMES = 3;
+    private static final int MAX_ARRIVAL_TIMES = 4;
     private final InMemoryTimetableService timetableService;
 
     public ItineraryService(InMemoryTimetableService timetableService) {
