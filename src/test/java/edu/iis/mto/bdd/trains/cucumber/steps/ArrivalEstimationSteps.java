@@ -34,12 +34,12 @@ public class ArrivalEstimationSteps {
     public void andNextTrainDepartureTimeAndLine(@Transform(JodaLocalTimeConverter.class) LocalTime departureTime, String line) throws Throwable {
         this.line = line;
         this.departureTime = departureTime;
-        timetableService.scheduleArrivalTime(line, departureTime);
+        timetableService.scheduleArrivalTime(line, departureTime, currentLocation);
     }
 
     @Gdy("^zapytam o godzinę przyjazdu$")
     public void whenIaskAboutArrivalTime() throws Throwable {
-        actualArrivalTime = timetableService.getArrivalTime(line, destination);
+        actualArrivalTime = timetableService.getArrivalTime(line);
     }
 
     @Wtedy("^powinienem uzyskać następujący szacowany czas przyjazdu: (.*)$")
