@@ -2,7 +2,7 @@ package edu.iis.mto.bdd.trains.model;
 
 import com.google.common.collect.ImmutableList;
 
-import java.util.ArrayList;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,17 +11,24 @@ public class Line {
     private final String line;
     private final String departingFrom;
     private final List<String> stations;
+    private final List<Instant> transferTimes;
 
     private Line(String line, String departingFrom) {
         this.line = line;
         this.departingFrom = departingFrom;
         this.stations = null;
+        transferTimes = null;
     }
 
-    private Line(String line, String departingFrom, List<String> stations) {
+    private Line(String line, String departingFrom, List<String> stations, List<Instant> transfertimes) {
         this.line = line;
         this.departingFrom = departingFrom;
         this.stations = stations;
+        this.transferTimes = transfertimes;
+    }
+
+    public static LineBuilder named(String lineName) {
+        return new LineBuilder(lineName);
     }
 
     public String getDepartingFrom() {
@@ -37,23 +44,11 @@ public class Line {
     }
 
     public Line withStations(String... stations) {
-        return new Line(this.line, this.departingFrom, Arrays.asList(Arrays.copyOf(stations, stations.length)));
+        return new Line(this.line, this.departingFrom, Arrays.asList(Arrays.copyOf(stations, stations.length)), this.transferTimes);
     }
 
-    public static LineBuilder named(String lineName) {
-        return new LineBuilder(lineName);
-    }
-
-    public static final class LineBuilder {
-        private final String lineName;
-
-        public LineBuilder(String lineName) {
-            this.lineName = lineName;
-        }
-
-        public Line departingFrom(String station) {
-            return new Line(lineName, station);
-        }
+    public Line withTransferTimes(Instant... transferTimes) {
+        return new Line(this.line, this.departingFrom, this.stations, Arrays.asList(Arrays.copyOf(transferTimes, transferTimes.length)));
     }
 
     @Override
@@ -83,5 +78,17 @@ public class Line {
                 "line='" + line + '\'' +
                 ", departingFrom='" + departingFrom + '\'' +
                 '}';
+    }
+
+    public static final class LineBuilder {
+        private final String lineName;
+
+        public LineBuilder(String lineName) {
+            this.lineName = lineName;
+        }
+
+        public Line departingFrom(String station) {
+            return new Line(lineName, station);
+        }
     }
 }
