@@ -3,38 +3,41 @@ package edu.iis.mto.bdd.trains.services;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import edu.iis.mto.bdd.trains.model.Line;
-import org.joda.time.Duration;
-import org.joda.time.Instant;
 import org.joda.time.LocalTime;
 
-import java.time.temporal.TemporalUnit;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-
-import static org.joda.time.Duration.*;
 
 public class InMemoryTimetableService implements TimetableService {
 
     List<Line> lines = ImmutableList.of(
             Line.named("Western").departingFrom("Emu Plains")
                     .withStations("Emu Plains", "Parramatta", "Town Hall", "North Richmond")
-                    .withTransferTimes(Instant.parse()),
+                    .withTransferTimes(durationOf(5), durationOf(5), durationOf(5), durationOf(5)),
             Line.named("Western").departingFrom("North Richmond")
-                    .withStations("North Richmond", "Town Hall", "Parramatta", "Emu Plains"),
+                    .withStations("North Richmond", "Town Hall", "Parramatta", "Emu Plains")
+                    .withTransferTimes(durationOf(5), durationOf(5), durationOf(5), durationOf(5)),
             Line.named("Epping").departingFrom("Epping")
-                    .withStations("Epping", "Strathfield", "Central"),
+                    .withStations("Epping", "Strathfield", "Central")
+                    .withTransferTimes(durationOf(5), durationOf(5), durationOf(5)),
             Line.named("Epping").departingFrom("City")
-                    .withStations("Central", "Strathfield", "Epping"),
+                    .withStations("Central", "Strathfield", "Epping")
+                    .withTransferTimes(durationOf(5), durationOf(5), durationOf(5)),
             Line.named("Newcastle").departingFrom("Epping")
-                    .withStations("Epping", "Newcastle", "Central"),
+                    .withStations("Epping", "Newcastle", "Central")
+                    .withTransferTimes(durationOf(5), durationOf(5), durationOf(5)),
             Line.named("Newcastle").departingFrom("City")
-                    .withStations("Central", "Newcastle", "Epping"),
+                    .withStations("Central", "Newcastle", "Epping")
+                    .withTransferTimes(durationOf(5), durationOf(5), durationOf(5)),
             Line.named("Northern").departingFrom("Epping")
-                    .withStations("Epping", "Northern", "Central"),
+                    .withStations("Epping", "Northern", "Central")
+                    .withTransferTimes(durationOf(5), durationOf(5), durationOf(5)),
             Line.named("Northern").departingFrom("City")
                     .withStations("Central", "Northern", "Epping")
+                    .withTransferTimes(durationOf(5), durationOf(5), durationOf(5))
     );
 
     // All trains leave the depots at the same time.
@@ -109,7 +112,7 @@ public class InMemoryTimetableService implements TimetableService {
         return line.getDepartingFrom() == station || line.getStations().contains(station);
     }
 
-    private Instant getInstant(int minutes){
-        return Instant.now().plus(Duration.standardMinutes(5));
+    private Duration durationOf(long minutes) {
+        return Duration.of(minutes, ChronoUnit.MINUTES);
     }
 }
