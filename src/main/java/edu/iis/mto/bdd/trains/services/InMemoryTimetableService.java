@@ -3,7 +3,6 @@ package edu.iis.mto.bdd.trains.services;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import edu.iis.mto.bdd.trains.model.Line;
-import org.joda.time.Duration;
 import org.joda.time.LocalTime;
 import org.joda.time.Period;
 
@@ -16,28 +15,28 @@ public class InMemoryTimetableService implements TimetableService {
     List<Line> lines = ImmutableList.of(
             Line.named("Western").departingFrom("Emu Plains")
                     .withStations("Emu Plains", "Parramatta", "Town Hall", "North Richmond")
-                    .withTransferTimes(durationOf(5), durationOf(5), durationOf(5), durationOf(5)),
+                    .withTransferTimes(durationOf(5), durationOf(27), durationOf(5)),
             Line.named("Western").departingFrom("North Richmond")
                     .withStations("North Richmond", "Town Hall", "Parramatta", "Emu Plains")
-                    .withTransferTimes(durationOf(5), durationOf(5), durationOf(5), durationOf(5)),
+                    .withTransferTimes(durationOf(5), durationOf(5), durationOf(5)),
             Line.named("Epping").departingFrom("Epping")
                     .withStations("Epping", "Strathfield", "Central")
-                    .withTransferTimes(durationOf(5), durationOf(5), durationOf(5)),
+                    .withTransferTimes(durationOf(20), durationOf(18)),
             Line.named("Epping").departingFrom("City")
                     .withStations("Central", "Strathfield", "Epping")
-                    .withTransferTimes(durationOf(5), durationOf(5), durationOf(5)),
+                    .withTransferTimes(durationOf(5), durationOf(5)),
             Line.named("Newcastle").departingFrom("Epping")
                     .withStations("Epping", "Newcastle", "Central")
-                    .withTransferTimes(durationOf(5), durationOf(5), durationOf(5)),
+                    .withTransferTimes(durationOf(20), durationOf(10)),
             Line.named("Newcastle").departingFrom("City")
                     .withStations("Central", "Newcastle", "Epping")
-                    .withTransferTimes(durationOf(5), durationOf(5), durationOf(5)),
+                    .withTransferTimes(durationOf(20), durationOf(5)),
             Line.named("Northern").departingFrom("Epping")
                     .withStations("Epping", "Northern", "Central")
-                    .withTransferTimes(durationOf(5), durationOf(5), durationOf(5)),
+                    .withTransferTimes(durationOf(20), durationOf(25)),
             Line.named("Northern").departingFrom("City")
                     .withStations("Central", "Northern", "Epping")
-                    .withTransferTimes(durationOf(5), durationOf(5), durationOf(5))
+                    .withTransferTimes(durationOf(5), durationOf(5))
     );
 
     // All trains leave the depots at the same time.
@@ -102,7 +101,8 @@ public class InMemoryTimetableService implements TimetableService {
 
         Period duration = calculateTimeDifference(startingPointIndex, destinationIndex);
         LocalTime arrivalTime = new LocalTime(departureTime);
-        arrivalTime.plusMinutes(Math.toIntExact(duration.getMinutes()));
+        int minutes = duration.getMinutes();
+        arrivalTime = arrivalTime.plusMinutes(Math.toIntExact(duration.getMinutes()));
 
         return arrivalTime;
     }
@@ -133,9 +133,9 @@ public class InMemoryTimetableService implements TimetableService {
     }
 
     private Period calculateTimeDifference(int startIndex, int endIndex) {
-        Period duration = new Period();
-        for (int i = startIndex; i <= endIndex; i++) {
-            duration.plus(currentLine.getTransferTimes().get(i));
+        Period duration = new Period(0);
+        for (int i = startIndex; i < endIndex; i++) {
+            duration = duration.plusMinutes(currentLine.getTransferTimes().get(i).getMinutes());
         }
         return duration;
     }
