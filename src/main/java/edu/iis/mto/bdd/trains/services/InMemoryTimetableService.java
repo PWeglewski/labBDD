@@ -3,10 +3,10 @@ package edu.iis.mto.bdd.trains.services;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import edu.iis.mto.bdd.trains.model.Line;
+import org.joda.time.Duration;
 import org.joda.time.LocalTime;
+import org.joda.time.Period;
 
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +46,7 @@ public class InMemoryTimetableService implements TimetableService {
             new LocalTime(8, 6), new LocalTime(8, 9), new LocalTime(8, 16));
     private Line currentLine;
     private LocalTime departureTime;
+    private String startingPoint;
 
     @Override
     public List<LocalTime> findArrivalTimes(Line line, String targetStation) {
@@ -91,12 +92,19 @@ public class InMemoryTimetableService implements TimetableService {
     public void scheduleArrivalTime(String line, LocalTime departureTime, String startingPoint) {
         this.currentLine = findLine(line, startingPoint);
         this.departureTime = departureTime;
+        this.startingPoint = startingPoint;
     }
 
     @Override
     public LocalTime getArrivalTime(String destination) {
-        // TODO: Call the back-end service to retrieve this data
-        return null;
+        int startingPointIndex = getCurrentStationNumber(this.startingPoint);
+        int destinationIndex = getFinalStationNumber(destination);
+
+        Period duration = calculateTimeDifference(startingPointIndex, destinationIndex);
+        LocalTime arrivalTime = new LocalTime(departureTime);
+        arrivalTime.plusMinutes(Math.toIntExact(duration.getMinutes()));
+
+        return arrivalTime;
     }
 
     private Line findLine(String lineName, String station) {
@@ -112,7 +120,23 @@ public class InMemoryTimetableService implements TimetableService {
         return line.getDepartingFrom() == station || line.getStations().contains(station);
     }
 
-    private Duration durationOf(long minutes) {
-        return Duration.of(minutes, ChronoUnit.MINUTES);
+    private Period durationOf(int minutes) {
+        return new Period().plusMinutes(minutes);
+    }
+
+    private int getCurrentStationNumber(String startingPoint) {
+        return currentLine.getStations().indexOf(startingPoint);
+    }
+
+    private int getFinalStationNumber(String destination) {
+        return currentLine.getStations().indexOf(destination);
+    }
+
+    private Period calculateTimeDifference(int startIndex, int endIndex) {
+        Period duration = new Period();
+        for (int i = startIndex; i <= endIndex; i++) {
+            duration.plus(currentLine.getTransferTimes().get(i));
+        }
+        return duration;
     }
 }

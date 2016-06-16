@@ -2,7 +2,8 @@ package edu.iis.mto.bdd.trains.model;
 
 import com.google.common.collect.ImmutableList;
 
-import java.time.Duration;
+import org.joda.time.Period;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public class Line {
     private final String line;
     private final String departingFrom;
     private final List<String> stations;
-    private final List<Duration> transferTimes;
+    private final List<Period> transferTimes;
 
     private Line(String line, String departingFrom) {
         this.line = line;
@@ -20,7 +21,7 @@ public class Line {
         transferTimes = null;
     }
 
-    private Line(String line, String departingFrom, List<String> stations, List<Duration> transfertimes) {
+    private Line(String line, String departingFrom, List<String> stations, List<Period> transfertimes) {
         this.line = line;
         this.departingFrom = departingFrom;
         this.stations = stations;
@@ -29,6 +30,10 @@ public class Line {
 
     public static LineBuilder named(String lineName) {
         return new LineBuilder(lineName);
+    }
+
+    public List<Period> getTransferTimes() {
+        return transferTimes;
     }
 
     public String getDepartingFrom() {
@@ -47,7 +52,7 @@ public class Line {
         return new Line(this.line, this.departingFrom, Arrays.asList(Arrays.copyOf(stations, stations.length)), this.transferTimes);
     }
 
-    public Line withTransferTimes(Duration... transferTimes) {
+    public Line withTransferTimes(Period... transferTimes) {
         return new Line(this.line, this.departingFrom, this.stations, Arrays.asList(Arrays.copyOf(transferTimes, transferTimes.length)));
     }
 

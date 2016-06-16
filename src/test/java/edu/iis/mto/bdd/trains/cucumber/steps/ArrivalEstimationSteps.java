@@ -39,7 +39,7 @@ public class ArrivalEstimationSteps {
 
     @Gdy("^zapytam o godzinę przyjazdu$")
     public void whenIaskAboutArrivalTime() throws Throwable {
-        actualArrivalTime = timetableService.getArrivalTime(line);
+        actualArrivalTime = timetableService.getArrivalTime(destination);
     }
 
     @Wtedy("^powinienem uzyskać następujący szacowany czas przyjazdu: (.*)$")
